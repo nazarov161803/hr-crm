@@ -3,7 +3,7 @@ name: Checkstyle
 on:
   pull_request:
     branches:
-      - main  # или укажите нужную вам ветку
+      - master
 
 jobs:
   checkstyle:
