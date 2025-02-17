@@ -1,24 +1,25 @@
 CREATE TABLE users
 (
-    id          UUID PRIMARY KEY,
-    first_name  VARCHAR(128)       NOT NULL,
-    last_name   VARCHAR(128)       NOT NULL,
-    middle_name VARCHAR(128),
-    login       VARCHAR(64) UNIQUE NOT NULL,
-    password    VARCHAR(64)        NOT NULL,
-    email       VARCHAR(64) UNIQUE NOT NULL,
-    role        VARCHAR(64)        NOT NULL,
-    position    VARCHAR(64),
-    salary      NUMERIC(12, 2),
-    phone       VARCHAR(32),
-    hire_date   DATE,
-    created_at  TIMESTAMP,
-    updated_at  TIMESTAMP
+    id            UUID PRIMARY KEY,
+    department_id UUID REFERENCES department (id),
+    first_name    VARCHAR(128)       NOT NULL,
+    last_name     VARCHAR(128)       NOT NULL,
+    middle_name   VARCHAR(128),
+    password      VARCHAR(64)        NOT NULL,
+    email         VARCHAR(64) UNIQUE NOT NULL,
+    role          VARCHAR(64)        NOT NULL,
+    position      VARCHAR(64),
+    salary        NUMERIC(12, 2),
+    phone         VARCHAR(32),
+    hire_date     DATE,
+    created_at    TIMESTAMP,
+    updated_at    TIMESTAMP
 );
 
 CREATE TABLE department
 (
     id          UUID PRIMARY KEY,
+    head_id     UUID REFERENCES users (id),
     name        VARCHAR(128) UNIQUE NOT NULL,
     description VARCHAR(1000),
     created_at  TIMESTAMP,
@@ -67,10 +68,3 @@ CREATE TABLE interview
     created_at     TIMESTAMP,
     updated_at     TIMESTAMP
 );
-
-
-ALTER TABLE users
-    ADD COLUMN department_id UUID REFERENCES department (id);
-
-ALTER TABLE department
-    ADD COLUMN head_id UUID REFERENCES users (id);

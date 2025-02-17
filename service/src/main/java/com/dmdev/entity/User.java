@@ -1,7 +1,8 @@
 package com.dmdev.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -10,7 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -22,18 +23,15 @@ import java.util.UUID;
 public class User {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "department_id")
     private UUID departmentId;
 
-    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "middle_name")
     private String middleName;
 
     private String login;
@@ -42,7 +40,7 @@ public class User {
 
     private String email;
 
-    private String role;
+    private Enum role;
 
     private String position;
 
@@ -50,12 +48,9 @@ public class User {
 
     private String phone;
 
-    @Column(name = "hire_date")
-    private LocalDate hireDate;
+    private Instant hireDate;
 
-    @Column(name = "created_at")
-    private LocalDate createdAt;
+    private Instant createdAt;
 
-    @Column(name = "updated_at")
-    private LocalDate updatedAt;
+    private Instant updatedAt;
 }
