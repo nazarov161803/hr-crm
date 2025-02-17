@@ -11,7 +11,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
-import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -48,7 +47,7 @@ public class Candidate {
 
     private String desiredPosition;
 
-    private Date birthDate;
+    private Instant birthDate;
 
     private Instant createdAt;
 
