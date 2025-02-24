@@ -1,17 +1,25 @@
 package com.dmdev.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -20,13 +28,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class User extends AuditableEntity<UUID> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
-    private UUID departmentId;
 
     private String firstName;
 
@@ -34,13 +40,12 @@ public class User {
 
     private String middleName;
 
-    private String login;
-
     private String password;
 
     private String email;
 
-    private Enum role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     private String position;
 
@@ -50,7 +55,25 @@ public class User {
 
     private Instant hireDate;
 
-    private Instant createdAt;
+    @OneToMany(mappedBy = "hr")
+    @ToString.Exclude
+    private List<Candidate> candidates;
 
-    private Instant updatedAt;
+    @OneToMany(mappedBy = "interviewer")
+    @ToString.Exclude
+    private List<Interview> interviews;
+
+    @OneToMany(mappedBy = "hr")
+    @ToString.Exclude
+    private List<Vacancy> vacancies;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id")
+    @ToString.Exclude
+    private Department department;
+
+    @OneToMany(mappedBy = "headOfDepartment")
+    @ToString.Exclude
+    private List<Department> departments;
+
 }
