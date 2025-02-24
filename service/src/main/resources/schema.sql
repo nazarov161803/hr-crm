@@ -12,6 +12,8 @@ CREATE TABLE users
     salary        NUMERIC(12, 2),
     phone         VARCHAR(32),
     hire_date     DATE,
+    created_by    VARCHAR(64),
+    updated_by    VARCHAR(64),
     created_at    TIMESTAMP,
     updated_at    TIMESTAMP
 );
@@ -23,7 +25,9 @@ CREATE TABLE department
     name        VARCHAR(128) UNIQUE NOT NULL,
     description VARCHAR(1000),
     created_at  TIMESTAMP,
-    updated_at  TIMESTAMP
+    updated_at  TIMESTAMP,
+    created_by  VARCHAR(64),
+    updated_by  VARCHAR(64)
 );
 
 
@@ -42,18 +46,23 @@ CREATE TABLE candidate
     desired_position VARCHAR(64)        NOT NULL,
     birth_date       DATE,
     created_at       TIMESTAMP,
-    updated_at       TIMESTAMP
+    updated_at       TIMESTAMP,
+    created_by       VARCHAR(64),
+    updated_by       VARCHAR(64)
 );
 
 CREATE TABLE vacancy
 (
     id            UUID PRIMARY KEY,
+    hr_id         UUID REFERENCES users (id),
     department_id UUID REFERENCES department (id),
     title         VARCHAR(64),
     description   VARCHAR(1000),
     status        VARCHAR(64) NOT NULL,
     created_at    TIMESTAMP,
-    updated_at    TIMESTAMP
+    updated_at    TIMESTAMP,
+    created_by    VARCHAR(64),
+    updated_by    VARCHAR(64)
 );
 
 CREATE TABLE interview
@@ -66,5 +75,7 @@ CREATE TABLE interview
     date_time      DATE,
     notes          VARCHAR(1000),
     created_at     TIMESTAMP,
-    updated_at     TIMESTAMP
+    updated_at     TIMESTAMP,
+    created_by     VARCHAR(64),
+    updated_by     VARCHAR(64)
 );
