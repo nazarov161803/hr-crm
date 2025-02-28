@@ -1,6 +1,10 @@
 package com.dmdev;
 
+import com.dmdev.entity.Candidate;
+import com.dmdev.entity.Department;
+import com.dmdev.entity.Interview;
 import com.dmdev.entity.User;
+import com.dmdev.entity.Vacancy;
 import lombok.experimental.UtilityClass;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy;
@@ -20,6 +24,10 @@ public class HibernateUtil {
         final Configuration configuration = new Configuration();
         configuration.setPhysicalNamingStrategy(new CamelCaseToUnderscoresNamingStrategy());
         configuration.addAnnotatedClass(User.class);
+        configuration.addAnnotatedClass(Candidate.class);
+        configuration.addAnnotatedClass(Vacancy.class);
+        configuration.addAnnotatedClass(Interview.class);
+        configuration.addAnnotatedClass(Department.class);
         return configuration;
 
     }

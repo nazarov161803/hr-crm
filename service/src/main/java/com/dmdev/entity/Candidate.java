@@ -14,10 +14,12 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,6 +29,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(exclude = {"hr", "interviews"})
+@ToString(exclude = {"hr", "interviews"})
 public class Candidate extends AuditableEntity<UUID> {
 
     @Id
@@ -60,10 +64,8 @@ public class Candidate extends AuditableEntity<UUID> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hr_id")
-    @ToString.Exclude
     private User hr;
 
     @OneToMany(mappedBy = "candidate")
-    @ToString.Exclude
-    private List<Interview> interviews;
+    private List<Interview> interviews = new ArrayList<>();
 }

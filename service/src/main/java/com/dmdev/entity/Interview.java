@@ -11,6 +11,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -23,6 +24,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(exclude = {"interviewer", "candidate", "vacancy"})
+@ToString(exclude = {"interviewer", "candidate", "vacancy"})
 public class Interview extends AuditableEntity<UUID> {
 
     @Id
@@ -37,17 +40,14 @@ public class Interview extends AuditableEntity<UUID> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "interviewer_id")
-    @ToString.Exclude
     private User interviewer;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "candidate_id")
-    @ToString.Exclude
     private Candidate candidate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vacancy_id")
-    @ToString.Exclude
     private Vacancy vacancy;
 
 }

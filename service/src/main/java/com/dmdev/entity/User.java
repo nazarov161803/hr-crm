@@ -14,11 +14,13 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,6 +30,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(exclude = {"candidates", "interviews", "vacancies", "department", "departments"})
+@ToString(exclude = {"candidates", "interviews", "vacancies", "department", "departments"})
 public class User extends AuditableEntity<UUID> {
 
     @Id
@@ -56,24 +60,18 @@ public class User extends AuditableEntity<UUID> {
     private Instant hireDate;
 
     @OneToMany(mappedBy = "hr")
-    @ToString.Exclude
-    private List<Candidate> candidates;
+    private List<Candidate> candidates = new ArrayList<>();
 
     @OneToMany(mappedBy = "interviewer")
-    @ToString.Exclude
-    private List<Interview> interviews;
+    private List<Interview> interviews = new ArrayList<>();
 
     @OneToMany(mappedBy = "hr")
-    @ToString.Exclude
-    private List<Vacancy> vacancies;
+    private List<Vacancy> vacancies = new ArrayList<>();
+
+    @OneToMany(mappedBy = "headOfDepartment")
+    private List<Department> departments = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
-    @ToString.Exclude
     private Department department;
-
-    @OneToMany(mappedBy = "headOfDepartment")
-    @ToString.Exclude
-    private List<Department> departments;
-
 }

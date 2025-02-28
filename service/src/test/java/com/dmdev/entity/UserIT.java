@@ -3,8 +3,9 @@ package com.dmdev.entity;
 import com.dmdev.utils.HibernateTestUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,119 +15,118 @@ import static org.junit.Assert.assertNull;
 
 public class UserIT {
 
-    @Test
-    public void hrCreateCheck() {
-        Configuration configuration = new Configuration();
-        configuration.configure();
-        try (SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory();
-             Session session = sessionFactory.openSession()) {
+    private Session session;
+    private final SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory();
 
-            User user = buildHr();
-            session.beginTransaction();
-            session.persist(user);
+    @BeforeEach
+    void setUp() {
+        session = sessionFactory.openSession();
+        session.beginTransaction();
+    }
 
-            assertThat(session.get(User.class, user.getId())).isEqualTo(user);
+    @AfterEach
+    void tearDown() {
+        if (session.getTransaction().isActive()) {
+            session.getTransaction().rollback();
         }
+        session.close();
     }
 
     @Test
-    public void hrUpdateCheck() {
-        Configuration configuration = new Configuration();
-        configuration.configure();
-        try (SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory();
-             Session session = sessionFactory.openSession()) {
-
-            User user = buildHr();
-            session.beginTransaction();
-            session.persist(user);
-            user.setEmail("testEmail.com");
-            session.merge(user);
-
-            assertThat(session.get(User.class, user.getId()).getEmail()).isEqualTo("testEmail.com");
-        }
-    }
-
-    @Test
-    public void hrRemoveCheck() {
-        Configuration configuration = new Configuration();
-        configuration.configure();
+    void hrCreateCheck() {
         User user = buildHr();
-        try (SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory();
-             Session session = sessionFactory.openSession()) {
 
-            session.beginTransaction();
-            session.persist(user);
-            session.remove(user);
+        session.persist(user);
+        session.getTransaction().commit();
+        session.clear();
 
-            assertNull(session.get(User.class, user.getId()));
-        }
+        final User actual = session.get(User.class, user.getId());
+        assertThat(actual).isEqualTo(user);
     }
 
     @Test
-    public void hrWithDepartmentCheck() {
-        Configuration configuration = new Configuration();
-        configuration.configure();
-        try (SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory();
-             Session session = sessionFactory.openSession()) {
+    void hrUpdateCheck() {
+        User user = buildHr();
 
-            Department department = Department.builder()
-                    .name("IT Department")
-                    .description("Handles IT solutions")
-                    .build();
+        session.persist(user);
+        user.setEmail("testEmail.com");
+        session.merge(user);
+        session.getTransaction().commit();
+        session.clear();
 
-            User hr = buildHr();
-            hr.setDepartment(department);
+        final User actual = session.get(User.class, user.getId());
+        assertThat(actual.getEmail()).isEqualTo("testEmail.com");
 
-            session.persist(department);
-            session.beginTransaction();
-            session.persist(hr);
-
-            User retrievedHr = session.get(User.class, hr.getId());
-            assertThat(retrievedHr.getDepartment()).isNotNull();
-            assertThat(retrievedHr.getDepartment().getName()).isEqualTo("IT Department");
-
-        }
     }
 
     @Test
-    public void hrWithCandidates() {
-        Configuration configuration = new Configuration();
-        configuration.configure();
-        try (SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory();
-             Session session = sessionFactory.openSession()) {
+    void hrRemoveCheck() {
+        User user = buildHr();
 
-            Candidate candidateOne = Candidate.builder()
-                    .firstName("Petr")
-                    .lastName("Petrov")
-                    .email("petr@com")
-                    .status(Status.OPEN)
-                    .desiredPosition("Developer")
-                    .build();
+        session.persist(user);
+        session.remove(user);
+        session.getTransaction().commit();
+        session.clear();
 
-            Candidate candidateTwo = Candidate.builder()
-                    .firstName("Ivan")
-                    .lastName("Ivanov")
-                    .email("ivan@com")
-                    .status(Status.HIRED)
-                    .desiredPosition("Developer")
-                    .build();
+        assertNull(session.get(User.class, user.getId()));
 
-            User hr = buildHr();
-            final List<Candidate> candidates = Arrays.asList(candidateOne, candidateTwo);
-            hr.setCandidates(candidates);
+    }
 
-            session.beginTransaction();
-            session.persist(candidateOne);
-            session.persist(candidateTwo);
-            session.persist(hr);
-            session.getTransaction().commit();
+    @Test
+    void hrWithDepartmentCheck() {
 
-            User retrievedHr = session.get(User.class, hr.getId());
-            assertThat(retrievedHr.getCandidates()).isNotNull();
-            assertThat(retrievedHr.getCandidates().size()).isEqualTo(2);
-            assertThat(retrievedHr.getCandidates()).containsExactlyElementsOf(candidates);
+        Department department = Department.builder()
+                .name("IT Department")
+                .description("Handles IT solutions")
+                .build();
 
-        }
+        User hr = buildHr();
+        hr.setDepartment(department);
+
+        session.persist(department);
+        session.persist(hr);
+        session.getTransaction().commit();
+        session.clear();
+
+        User retrievedHr = session.get(User.class, hr.getId());
+        assertThat(retrievedHr.getDepartment()).isNotNull();
+        assertThat(retrievedHr.getDepartment().getName()).isEqualTo("IT Department");
+
+    }
+
+    @Test
+    void hrWithCandidates() {
+        User hr = buildHr();
+        Candidate candidateOne = Candidate.builder()
+                .firstName("Petr")
+                .lastName("Petrov")
+                .email("petr@com")
+                .status(Status.OPEN)
+                .hr(hr)
+                .desiredPosition("Developer")
+                .build();
+        Candidate candidateTwo = Candidate.builder()
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .email("ivan@com")
+                .status(Status.HIRED)
+                .hr(hr)
+                .desiredPosition("Developer")
+                .build();
+        final List<Candidate> candidates = Arrays.asList(candidateOne, candidateTwo);
+        hr.setCandidates(candidates);
+
+        session.persist(candidateOne);
+        session.persist(candidateTwo);
+        session.persist(hr);
+        session.getTransaction().commit();
+        session.clear();
+
+        User retrievedHr = session.get(User.class, hr.getId());
+        assertThat(retrievedHr.getCandidates()).isNotNull();
+        assertThat(retrievedHr.getCandidates().size()).isEqualTo(2);
+        assertThat(retrievedHr.getCandidates()).containsAll(candidates);
+
     }
 
     private User buildHr() {
