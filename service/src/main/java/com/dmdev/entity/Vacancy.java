@@ -1,16 +1,23 @@
 package com.dmdev.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -19,21 +26,29 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Vacancy {
+@EqualsAndHashCode(exclude = {"interviews", "hr", "department"})
+@ToString(exclude = {"interviews", "hr", "department"})
+public class Vacancy extends AuditableEntity<UUID> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    private UUID departmentId;
-
     private String title;
 
     private String description;
 
-    private Enum status;
+    private String status;
 
-    private Instant createdAt;
+    @OneToMany(mappedBy = "vacancy")
+    private List<Interview> interviews = new ArrayList<>();
 
-    private Instant updatedAt;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hr_id")
+    private User hr;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id")
+    private Department department;
+
 }
