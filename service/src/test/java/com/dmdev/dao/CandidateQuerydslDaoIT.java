@@ -4,11 +4,6 @@ import com.dmdev.entity.Candidate;
 import com.dmdev.entity.Role;
 import com.dmdev.entity.Status;
 import com.dmdev.entity.User;
-import com.dmdev.utils.HibernateTestUtil;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -16,24 +11,8 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
-class CandidateQuerydslDaoIT {
-    private Session session;
-    private final SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory();
+class CandidateQuerydslDaoIT extends AbstractDao {
     private final CandidateQueryDslDao dao = CandidateQueryDslDao.getInstance();
-
-    @BeforeEach
-    void setUp() {
-        session = sessionFactory.openSession();
-        session.beginTransaction();
-    }
-
-    @AfterEach
-    void tearDown() {
-        if (session.getTransaction().isActive()) {
-            session.getTransaction().rollback();
-        }
-        session.close();
-    }
 
     @Test
     void getCandidateWithConnectedHrEmail() {
@@ -45,7 +24,7 @@ class CandidateQuerydslDaoIT {
         session.persist(hr);
         session.persist(candidate1);
         session.persist(candidate2);
-        session.getTransaction().commit();
+        session.flush();
         session.clear();
 
         List<Candidate> candidates = dao.getCandidateWithConnectedHrEmail(session, "hr@example.com");
@@ -61,7 +40,7 @@ class CandidateQuerydslDaoIT {
         Candidate candidateZenden = buildCandidate("Anna", "Annova", Status.OPEN);
         session.persist(candidateZenden);
         session.persist(candidateAnna);
-        session.getTransaction().commit();
+        session.flush();
         session.clear();
 
         List<Candidate> candidates = dao.getCandidatesOrderByLastName(session);

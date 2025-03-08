@@ -26,7 +26,7 @@ public class UserCriteriaDao {
     /*
      * Получить всех пользователей.
      */
-    public List<User> getAllUsers(final Session session) {
+    public List<User> getAllUsers(Session session) {
         final HibernateCriteriaBuilder cb = session.getCriteriaBuilder(); // Здесь мы берём специальный объект (CriteriaBuilder), который помогает строить запросы в виде объектов Java. Это как инструмент, который позволяет "собирать" запрос из частей
 
         final JpaCriteriaQuery<User> criteria = cb.createQuery(User.class);  // Мы создаем новый запрос, который будет возвращать объекты типа User. Это как объявление: «Я хочу получить список пользователей».
@@ -41,7 +41,7 @@ public class UserCriteriaDao {
     /*
      * Получить всех пользователей, у которых firstName равен заданному значению.
      */
-    public List<User> getUserByFirstName(final Session session, final String firstName) {
+    public List<User> getUserByFirstName(Session session, String firstName) {
         final HibernateCriteriaBuilder cb = session.getCriteriaBuilder();
 
         final JpaCriteriaQuery<User> criteria = cb.createQuery(User.class);
@@ -58,7 +58,7 @@ public class UserCriteriaDao {
     /*
      * Получить первых {limit} пользователей, упорядоченных по дате найма
      */
-    public List<User> getLimitedUsersOrderByHireDate(final Session session, final int limit) {
+    public List<User> getLimitedUsersOrderByHireDate(Session session, int limit) {
         final HibernateCriteriaBuilder cb = session.getCriteriaBuilder();
 
         final JpaCriteriaQuery<User> criteria = cb.createQuery(User.class);
@@ -77,7 +77,7 @@ public class UserCriteriaDao {
     /*
      * Получит hrs и их кандидатов, у которых есть кандидаты со статусом OPEN
      */
-    public List<User> getHrsWithCandidateStatusOpen(final Session session) {
+    public List<User> getHrsWithCandidateStatusOpen(Session session) {
         final HibernateCriteriaBuilder cb = session.getCriteriaBuilder();
 
         final JpaCriteriaQuery<User> criteria = cb.createQuery(User.class);

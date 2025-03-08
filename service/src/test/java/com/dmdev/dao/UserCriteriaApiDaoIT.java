@@ -4,11 +4,6 @@ import com.dmdev.entity.Candidate;
 import com.dmdev.entity.Role;
 import com.dmdev.entity.Status;
 import com.dmdev.entity.User;
-import com.dmdev.utils.HibernateTestUtil;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -17,24 +12,9 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
-class UserCriteriaApiDaoIT {
-    private Session session;
-    private final SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory();
+class UserCriteriaApiDaoIT extends AbstractDao {
+
     private final UserCriteriaDao dao = UserCriteriaDao.getInstance();
-
-    @BeforeEach
-    void setUp() {
-        session = sessionFactory.openSession();
-        session.beginTransaction();
-    }
-
-    @AfterEach
-    void tearDown() {
-        if (session.getTransaction().isActive()) {
-            session.getTransaction().rollback();
-        }
-        session.close();
-    }
 
     @Test
     void getAllUsers() {
@@ -42,7 +22,7 @@ class UserCriteriaApiDaoIT {
         User user2 = buildHr("Alice", "alice@example.com", null);
         session.persist(user1);
         session.persist(user2);
-        session.getTransaction().commit();
+        session.flush();
         session.clear();
 
         List<User> users = dao.getAllUsers(session);
@@ -61,7 +41,7 @@ class UserCriteriaApiDaoIT {
         session.persist(hr1);
         session.persist(hr2);
         session.persist(hr3);
-        session.getTransaction().commit();
+        session.flush();
         session.clear();
 
         List<User> limitedUsers = dao.getLimitedUsersOrderByHireDate(session, 2);
@@ -82,7 +62,7 @@ class UserCriteriaApiDaoIT {
         session.persist(hr);
         session.persist(candidateOpen);
         session.persist(candidateOther);
-        session.getTransaction().commit();
+        session.flush();
         session.clear();
 
         List<User> hrs = dao.getHrsWithCandidateStatusOpen(session);
@@ -101,7 +81,7 @@ class UserCriteriaApiDaoIT {
         User user2 = buildHr("Alice", "alice@example.com", null);
         session.persist(user1);
         session.persist(user2);
-        session.getTransaction().commit();
+        session.flush();
         session.clear();
 
         List<User> users = dao.getUserByFirstName(session, user1.getFirstName());

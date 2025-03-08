@@ -21,7 +21,7 @@ public class UserQueryDslDao {
     /*
      * Получить всех пользователей.
      */
-    public List<User> getAllUsers(final Session session) {
+    public List<User> getAllUsers(Session session) {
         return new JPAQuery<User>(session)
                 .select(user)
                 .from(user)
@@ -31,7 +31,7 @@ public class UserQueryDslDao {
     /*
      * Получить всех пользователей, у которых firstName равен заданному значению.
      */
-    public List<User> getUserByFirstName(final Session session, final String firstName) {
+    public List<User> getUserByFirstName(Session session, String firstName) {
         return new JPAQuery<User>(session)
                 .select(user)
                 .from(user)
@@ -42,7 +42,7 @@ public class UserQueryDslDao {
     /*
      * Получить первых {limit} пользователей, упорядоченных по дате найма
      */
-    public List<User> getLimitedUsersOrderByHireDate(final Session session, final int limit) {
+    public List<User> getLimitedUsersOrderByHireDate(Session session, int limit) {
         return new JPAQuery<User>(session)
                 .select(user)
                 .from(user)
@@ -54,7 +54,7 @@ public class UserQueryDslDao {
     /*
      * Получит hrs и их кандидатов, у которых есть кандидаты со статусом OPEN
      */
-    public List<User> getHrsWithCandidateStatusOpen(final Session session) {
+    public List<User> getHrsWithCandidateStatusOpen(Session session) {
         return new JPAQuery<User>(session)
                 .select(user)
                 .distinct()

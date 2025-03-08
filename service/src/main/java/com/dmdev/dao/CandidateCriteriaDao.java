@@ -19,11 +19,10 @@ public class CandidateCriteriaDao {
         return INSTANCE;
     }
 
-
     /*
      * Получить кандидатов, у которых hr с указанным email
      */
-    public List<Candidate> getCandidateWithConnectedHrEmail(final Session session, final String hrEmail) {
+    public List<Candidate> getCandidateWithConnectedHrEmail(Session session, String hrEmail) {
         final HibernateCriteriaBuilder cb = session.getCriteriaBuilder();
 
         final JpaCriteriaQuery<Candidate> criteria = cb.createQuery(Candidate.class);
@@ -41,7 +40,7 @@ public class CandidateCriteriaDao {
     /*
      * Получить кандидатов, отсортированных по lastName в порядке убывания.
      */
-    public List<Candidate> getCandidatesOrderByLastName(final Session session) {
+    public List<Candidate> getCandidatesOrderByLastName(Session session) {
         final HibernateCriteriaBuilder cb = session.getCriteriaBuilder();
 
         final JpaCriteriaQuery<Candidate> criteria = cb.createQuery(Candidate.class);

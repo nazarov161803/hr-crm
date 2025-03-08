@@ -1,7 +1,8 @@
 package com.dmdev.dao;
 
+import com.dmdev.dto.CandidateFilter;
 import com.dmdev.entity.Candidate;
-import com.dmdev.entity.QUser;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQuery;
 import org.hibernate.Session;
 
@@ -15,13 +16,13 @@ public class CandidateQueryDslDao {
     private static final CandidateQueryDslDao INSTANCE = new CandidateQueryDslDao();
 
     public static CandidateQueryDslDao getInstance() {
-        return INSTANCE;
-    }
+        return INSTANCE;}
+
 
     /*
      * Получить кандидатов, у которых hr с указанным email
      */
-    public List<Candidate> getCandidateWithConnectedHrEmail(final Session session, final String hrEmail) {
+    public List<Candidate> getCandidateWithConnectedHrEmail(Session session, String hrEmail) {
         return new JPAQuery<Candidate>(session)
                 .select(candidate)
                 .from(candidate)
@@ -33,7 +34,7 @@ public class CandidateQueryDslDao {
     /*
      * Получить кандидатов, отсортированных по lastName в порядке убывания.
      */
-    public List<Candidate> getCandidatesOrderByLastName(final Session session) {
+    public List<Candidate> getCandidatesOrderByLastName(Session session) {
         return new JPAQuery<Candidate>(session)
                 .select(candidate)
                 .from(candidate)
