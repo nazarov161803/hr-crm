@@ -1,8 +1,6 @@
 package com.dmdev.dao;
 
-import com.dmdev.dto.CandidateFilter;
 import com.dmdev.entity.Candidate;
-import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQuery;
 import org.hibernate.Session;
 
@@ -16,8 +14,8 @@ public class CandidateQueryDslDao {
     private static final CandidateQueryDslDao INSTANCE = new CandidateQueryDslDao();
 
     public static CandidateQueryDslDao getInstance() {
-        return INSTANCE;}
-
+        return INSTANCE;
+    }
 
     /*
      * Получить кандидатов, у которых hr с указанным email
