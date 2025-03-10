@@ -1,6 +1,5 @@
 package com.dmdev.dao;
 
-import com.dmdev.entity.User;
 import com.dmdev.entity.Vacancy;
 import jakarta.persistence.EntityManager;
 
