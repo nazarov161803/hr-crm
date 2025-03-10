@@ -1,6 +1,7 @@
 CREATE TABLE users
 (
     id            UUID PRIMARY KEY,
+    version       BIGINT default 0,
     department_id UUID REFERENCES department (id),
     first_name    VARCHAR(128)       NOT NULL,
     last_name     VARCHAR(128)       NOT NULL,
@@ -34,6 +35,7 @@ CREATE TABLE department
 CREATE TABLE candidate
 (
     id               UUID PRIMARY KEY,
+    version       BIGINT default 0,
     hr_id            UUID REFERENCES users (id),
     first_name       VARCHAR(128)       NOT NULL,
     last_name        VARCHAR(128)       NOT NULL,

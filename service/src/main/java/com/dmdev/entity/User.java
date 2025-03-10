@@ -11,12 +11,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.OptimisticLocking;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -32,11 +34,15 @@ import java.util.UUID;
 @Builder
 @EqualsAndHashCode(exclude = {"candidates", "interviews", "vacancies", "department", "departments"})
 @ToString(exclude = {"candidates", "interviews", "vacancies", "department", "departments"})
+@OptimisticLocking()
 public class User extends AuditableEntity<UUID> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @Version
+    private Long version;
 
     private String firstName;
 
