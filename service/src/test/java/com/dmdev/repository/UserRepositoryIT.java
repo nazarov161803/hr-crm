@@ -2,6 +2,7 @@ package com.dmdev.repository;
 
 import com.dmdev.entity.Role;
 import com.dmdev.entity.User;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -11,25 +12,25 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 public class UserRepositoryIT extends AbstractRepository {
 
-    UserRepository userRepository = new UserRepository(session);
+    static UserRepository userRepository;
+
+    @BeforeAll
+    static void beforeAll() {
+        userRepository = context.getBean(UserRepository.class);
+    }
 
     @Test
     void save() {
         User hr = buildHr();
-
         userRepository.save(hr);
-
         session.flush();
         session.clear();
+
         Optional<User> actualResult = userRepository.findById(hr.getId());
-        assertThat(actualResult)
-                .isPresent()
-                .contains(hr);
+
+        assertThat(actualResult.get().getId()).isEqualTo(hr.getId());
     }
 
-    //  получается такой же как и save ?
-//  1. save возвращает тебе сущность с id - достаточно проверить id
-//  2. у тебя разные when - а ты их миксуешь и не понятно что вообще тестируешь
     @Test
     void findById() {
         User hr = buildHr();
@@ -57,7 +58,6 @@ public class UserRepositoryIT extends AbstractRepository {
         session.clear();
 
         Optional<User> actualResult = userRepository.findById(hr.getId());
-//        actualResult.ifPresent(user -> user.setVersion(0L));
 
         assertThat(actualResult)
                 .isPresent()
