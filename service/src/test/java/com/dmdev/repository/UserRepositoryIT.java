@@ -1,4 +1,4 @@
-package com.dmdev.dao;
+package com.dmdev.repository;
 
 import com.dmdev.entity.Role;
 import com.dmdev.entity.User;
@@ -11,29 +11,27 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 public class UserRepositoryIT extends AbstractRepository {
 
-    //    не понимаю как сделать правильно тк session пока еще тут null, но иницилизировать в каждом методе не хочется
-//    UserRepository userRepository = new UserRepository(session);
-    UserRepository userRepository;
+    UserRepository userRepository = new UserRepository(session);
 
     @Test
     void save() {
-        userRepository = new UserRepository(session);
         User hr = buildHr();
+
         userRepository.save(hr);
+
         session.flush();
         session.clear();
-
-        final Optional<User> actualResult = userRepository.findById(hr.getId());
-
+        Optional<User> actualResult = userRepository.findById(hr.getId());
         assertThat(actualResult)
                 .isPresent()
                 .contains(hr);
     }
 
     //  получается такой же как и save ?
+//  1. save возвращает тебе сущность с id - достаточно проверить id
+//  2. у тебя разные when - а ты их миксуешь и не понятно что вообще тестируешь
     @Test
     void findById() {
-        userRepository = new UserRepository(session);
         User hr = buildHr();
         userRepository.save(hr);
         session.flush();
@@ -48,7 +46,6 @@ public class UserRepositoryIT extends AbstractRepository {
 
     @Test
     void update() {
-        userRepository = new UserRepository(session);
         User hr = buildHr();
         userRepository.save(hr);
         session.flush();
@@ -60,15 +57,17 @@ public class UserRepositoryIT extends AbstractRepository {
         session.clear();
 
         Optional<User> actualResult = userRepository.findById(hr.getId());
+//        actualResult.ifPresent(user -> user.setVersion(0L));
 
         assertThat(actualResult)
                 .isPresent()
-                .contains(hr);
+                .get()
+                .isEqualTo(hr);
+
     }
 
     @Test
     void delete() {
-        userRepository = new UserRepository(session);
         User hr = buildHr();
         userRepository.save(hr);
         session.flush();
@@ -83,7 +82,6 @@ public class UserRepositoryIT extends AbstractRepository {
 
     @Test
     void findAll() {
-        userRepository = new UserRepository(session);
         User hr = buildHr();
         User hr2 = buildHrWithName("Melani");
         userRepository.save(hr);
@@ -91,7 +89,7 @@ public class UserRepositoryIT extends AbstractRepository {
         session.flush();
         session.clear();
 
-        final List<User> actualResult = userRepository.findAll();
+        List<User> actualResult = userRepository.findAll();
 
         assertThat(actualResult).hasSize(2)
                 .contains(hr)

@@ -1,4 +1,4 @@
-package com.dmdev.dao;
+package com.dmdev.repository;
 
 import com.dmdev.entity.BaseEntity;
 

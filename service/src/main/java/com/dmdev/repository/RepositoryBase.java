@@ -1,4 +1,4 @@
-package com.dmdev.dao;
+package com.dmdev.repository;
 
 import com.dmdev.entity.BaseEntity;
 import jakarta.persistence.EntityManager;
@@ -39,7 +39,6 @@ public abstract class RepositoryBase<K extends Serializable, E extends BaseEntit
 
     @Override
     public List<E> findAll() {
-
         final CriteriaQuery<E> criteria = entityManager.getCriteriaBuilder().createQuery(clazz);
         criteria.from(clazz);
         return entityManager.createQuery(criteria).getResultList();
