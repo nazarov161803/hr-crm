@@ -12,6 +12,8 @@
         <property name="show_sql">true</property>
         <property name="format_sql">true</property>
         <property name="hibernate.physical_naming_strategy">org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy</property>
+        <property name="hibernate.current_session_context_class">thread</property>
+
 
         <mapping class="com.dmdev.entity.User"/>
         <mapping class="com.dmdev.entity.Candidate"/>
