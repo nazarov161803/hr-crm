@@ -19,6 +19,7 @@
         <querydsl.version>5.0.0</querydsl.version>
         <lombok.version>1.18.36</lombok.version>
         <hibernate.version>6.3.0.Final</hibernate.version>
+        <spring.version>7.0.0-M2</spring.version>
         <jakarta.version>3.1.0</jakarta.version>
     </properties>
 
@@ -87,11 +88,25 @@
                 <version>${querydsl.version}</version>
                 <classifier>jakarta</classifier>
             </dependency>
-
             <dependency>
                 <groupId>jakarta.persistence</groupId>
                 <artifactId>jakarta.persistence-api</artifactId>
                 <version>${jakarta.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.annotation</groupId>
+                <artifactId>jakarta.annotation-api</artifactId>
+                <version>3.0.0</version>
             </dependency>
 
         </dependencies>
